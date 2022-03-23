@@ -1,5 +1,7 @@
 package br.com.cabreira.minhastarefas.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +21,7 @@ public class Usuario {
     @Column(nullable = false)
     private String senha;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<Tarefa> tarefas;
 
