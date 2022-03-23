@@ -1,11 +1,10 @@
 package br.com.cabreira.minhastarefas.model;
 
-
-
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name="Tarefas")
 public class Tarefa {
 
     @Id
@@ -21,6 +20,14 @@ public class Tarefa {
     private LocalDate dataDeEntrega;
 
     private boolean visivel;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private TarefaCategoria categoria;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Usuario usuario;
 
     public Integer getId() {
         return id;
@@ -62,4 +69,19 @@ public class Tarefa {
         this.visivel = visivel;
     }
 
+    public TarefaCategoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(TarefaCategoria categoria) {
+        this.categoria = categoria;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 }

@@ -3,8 +3,8 @@ package br.com.cabreira.minhastarefas.model;
 import javax.persistence.*;
 
 @Entity
+@Table(name="TarefasCategoria")
 public class TarefaCategoria {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
