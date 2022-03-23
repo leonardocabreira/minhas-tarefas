@@ -1,20 +1,34 @@
 package br.com.cabreira.minhastarefas.model;
 
+
+
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
 public class Tarefa {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+
+    @Column(nullable = false, length = 150)
     private String descricao;
 
+    @Enumerated(EnumType.STRING)
     private TarefaStatus status;
 
     private LocalDate dataDeEntrega;
 
     private boolean visivel;
 
-    private TarefaCategoria categoria;
+    public Integer getId() {
+        return id;
+    }
 
-    private Usuario usuario;
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getDescricao() {
         return descricao;
@@ -48,19 +62,4 @@ public class Tarefa {
         this.visivel = visivel;
     }
 
-    public TarefaCategoria getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(TarefaCategoria categoria) {
-        this.categoria = categoria;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
 }
