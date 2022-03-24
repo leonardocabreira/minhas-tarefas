@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name="Tarefas")
+@NamedQuery(name="Tarefa.tarefasPorUsuario", query = "select t from Tarefa t inner join t.usuario u where u.nome = ?1")
 public class Tarefa {
 
     @Id
