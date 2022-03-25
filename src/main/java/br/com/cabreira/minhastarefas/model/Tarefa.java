@@ -1,6 +1,9 @@
 package br.com.cabreira.minhastarefas.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Entity
@@ -12,12 +15,15 @@ public class Tarefa {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @Size(min=5, max=150, message="O Campo descrição deve ter entre 5 e 150 caracteres")
+    @NotBlank(message = "Campo descrição não pode estar vazio")
     @Column(nullable = false, length = 150)
     private String descricao;
 
     @Enumerated(EnumType.STRING)
     private TarefaStatus status;
 
+    @FutureOrPresent(message = "Data de entrada deve ser maior ou iguala data atual")
     private LocalDate dataDeEntrega;
 
     private boolean visivel;

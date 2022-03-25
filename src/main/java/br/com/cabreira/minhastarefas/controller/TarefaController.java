@@ -5,6 +5,7 @@ import br.com.cabreira.minhastarefas.repository.TarefaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class TarefaController {
     }
 
     @PostMapping("/tarefa")
-    public Tarefa salvarTarefa(@RequestBody Tarefa tarefa){
+    public Tarefa salvarTarefa(@Valid @RequestBody Tarefa tarefa){
         return repositorio.save(tarefa);
     }
 
