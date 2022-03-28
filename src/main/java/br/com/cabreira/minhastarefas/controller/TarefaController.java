@@ -28,8 +28,8 @@ public class TarefaController {
     public Tarefa tarefa(@PathVariable Integer id){
         return repositorio.findById(id).orElse(null);
     }
-
-    @PostMapping("/tarefa")
+            /*produces = JSON*/
+    @PostMapping(value = "/tarefa")
     public Tarefa salvarTarefa(@Valid @RequestBody Tarefa tarefa){
         return repositorio.save(tarefa);
     }
