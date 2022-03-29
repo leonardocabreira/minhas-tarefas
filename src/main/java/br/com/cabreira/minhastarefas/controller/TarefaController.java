@@ -2,6 +2,7 @@ package br.com.cabreira.minhastarefas.controller;
 
 import br.com.cabreira.minhastarefas.model.Tarefa;
 import br.com.cabreira.minhastarefas.repository.TarefaRepository;
+import br.com.cabreira.minhastarefas.services.TarefaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,31 +13,31 @@ import java.util.Map;
 @RestController
 public class TarefaController {
 
-    @Autowired
-    private TarefaRepository repositorio;
+   @Autowired
+    private TarefaService service;
 
     @GetMapping("/tarefa")
     public List<Tarefa> todasTarefas(@RequestParam Map<String,String> parametros){
         if(parametros.isEmpty())
-            return repositorio.findAll();
+            return service.getTodasTarefas();
 
         String descricao = parametros.get("descricao");
-        return repositorio.findByDescricaoLike("%"+descricao+"%");
+        return service.getTarefasPorDescricao(descricao);
     }
 
     @GetMapping("/tarefa/{id}")
     public Tarefa tarefa(@PathVariable Integer id){
-        return repositorio.findById(id).orElse(null);
+        return service.getTarefaPorId(id);
     }
             /*produces = JSON*/
     @PostMapping(value = "/tarefa")
     public Tarefa salvarTarefa(@Valid @RequestBody Tarefa tarefa){
-        return repositorio.save(tarefa);
+        return service.salvarTarefa(tarefa);
     }
 
     @DeleteMapping("/tarefa/{id}")
     public void excluirTarefa(@PathVariable Integer id){
-        repositorio.deleteById(id);
+        service.deletePorId(id);
     }
 
 }
