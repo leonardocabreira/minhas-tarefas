@@ -16,17 +16,41 @@ public class TarefaServiceIntegrationTest {
 
     @Test
     void deveIniciarTarefa(){
-        final Tarefa tarefa = service.iniciarTarefaPorId(3);
+        final int id = 3;
+        final Tarefa tarefa = service.iniciarTarefaPorId(id);
         Assertions.assertEquals(TarefaStatus.EM_ANDAMENTO,tarefa.getStatus());
     }
 
     @Test
-    void naoDeveIniciarTarefaConcluida(){
-        final Tarefa tarefa  = service.getTarefaPorId(3);
+    void naoDeveIniciarTarefaQueNaoEstejaEmAberto(){
+        final int id = 4;
+        final Tarefa tarefa  = service.getTarefaPorId(id);
         tarefa.setStatus(TarefaStatus.CONCLUIDA);
         service.salvarTarefa(tarefa);
         Assertions.assertThrows(TarefaStatusExeption.class,
-                () -> service.iniciarTarefaPorId(3));
+                () -> service.iniciarTarefaPorId(id));
+
+    }
+
+    @Test
+    void naoDeveConcluirTarefaCancelada(){
+        final int id = 4;
+        final Tarefa tarefa  = service.getTarefaPorId(id);
+        tarefa.setStatus(TarefaStatus.CANCELADA);
+        service.salvarTarefa(tarefa);
+        Assertions.assertThrows(TarefaStatusExeption.class,
+                () -> service.concluirTarefaPorId(id));
+
+    }
+
+    @Test
+    void naoDeveCancelarTarefaConcluida(){
+        final int id = 4;
+        final Tarefa tarefa  = service.getTarefaPorId(id);
+        tarefa.setStatus(TarefaStatus.CONCLUIDA);
+        service.salvarTarefa(tarefa);
+        Assertions.assertThrows(TarefaStatusExeption.class,
+                () -> service.cancelarTarefaPorId(id));
 
     }
 }
