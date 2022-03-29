@@ -1,17 +1,18 @@
 package br.com.cabreira.minhastarefas.services;
 
+import br.com.cabreira.minhastarefas.exception.TarefaStatusExeption;
 import br.com.cabreira.minhastarefas.model.Tarefa;
+import br.com.cabreira.minhastarefas.model.TarefaStatus;
 import br.com.cabreira.minhastarefas.repository.TarefaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class TarefaService {
+
     @Autowired
     private TarefaRepository repositorio;
 
@@ -34,4 +35,19 @@ public class TarefaService {
     public void deletePorId(Integer id){
         repositorio.deleteById(id);
     }
+
+    public Tarefa iniciarTarefaPorId(Integer id){
+        final Tarefa tarefa = getTarefaPorId(id);
+
+        if(!TarefaStatus.ABERTO.equals(tarefa.getStatus()))
+            throw new TarefaStatusExeption();
+
+        tarefa.setStatus(TarefaStatus.EM_ANDAMENTO);
+        salvarTarefa(tarefa);
+        return tarefa;
+    }
+
+
+
+
 }

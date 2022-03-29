@@ -43,11 +43,19 @@ public class CarregaBaseDeDados{
             Tarefa tarefa = new Tarefa();
             tarefa.setDescricao("Aprender Spring Boot");
             tarefa.setDataDeEntrega(LocalDate.now().plusDays(1));
-            tarefa.setStatus(TarefaStatus.ABERTO);
             tarefa.setVisivel(true);
             tarefa.setCategoria(categoria);
             tarefa.setUsuario(usuario);
             tarefaRepository.save(tarefa);
+
+            Tarefa tarefa2 = new Tarefa();
+            tarefa2.setDescricao("Testar SpringBoot");
+            tarefa2.setDataDeEntrega(LocalDate.now().plusDays(2));
+            tarefa2.setVisivel(true);
+            tarefa2.setCategoria(categoria);
+            tarefa2.setUsuario(usuario);
+            tarefaRepository.save(tarefa2);
+
         };
     }
 }
