@@ -1,5 +1,6 @@
 package br.com.cabreira.minhastarefas.controller;
 
+import br.com.cabreira.minhastarefas.controller.request.TarefaRequest;
 import br.com.cabreira.minhastarefas.controller.response.TarefaResponse;
 import br.com.cabreira.minhastarefas.model.Tarefa;
 import br.com.cabreira.minhastarefas.services.TarefaService;
@@ -43,7 +44,8 @@ public class TarefaController {
     }
             /*produces = JSON*/
     @PostMapping(value = "/tarefa")
-    public TarefaResponse salvarTarefa(@Valid @RequestBody Tarefa tarefa){
+    public TarefaResponse salvarTarefa(@Valid @RequestBody TarefaRequest tarefaRequest){
+        Tarefa tarefa = mapper.map(tarefaRequest, Tarefa.class);
         return mapper.map(service.salvarTarefa(tarefa),TarefaResponse.class);
     }
 

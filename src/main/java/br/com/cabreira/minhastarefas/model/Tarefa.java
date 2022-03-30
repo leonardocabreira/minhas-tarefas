@@ -3,6 +3,7 @@ package br.com.cabreira.minhastarefas.model;
 import javax.persistence.*;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
@@ -23,8 +24,9 @@ public class Tarefa {
     @Enumerated(EnumType.STRING)
     private TarefaStatus status = TarefaStatus.ABERTO;
 
+    @NotNull
     @FutureOrPresent(message = "{tarefa.descricao.future-or-present}")
-    private LocalDate dataDeEntrega;
+    private LocalDate dataEntrega;
 
     private boolean visivel;
 
@@ -60,12 +62,12 @@ public class Tarefa {
         this.status = status;
     }
 
-    public LocalDate getDataDeEntrega() {
-        return dataDeEntrega;
+    public LocalDate getDataEntrega() {
+        return dataEntrega;
     }
 
-    public void setDataDeEntrega(LocalDate dataDeEntrega) {
-        this.dataDeEntrega = dataDeEntrega;
+    public void setDataEntrega(LocalDate dataEntrega) {
+        this.dataEntrega = dataEntrega;
     }
 
     public boolean isVisivel() {

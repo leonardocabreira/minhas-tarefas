@@ -2,7 +2,6 @@ package br.com.cabreira.minhastarefas.config;
 
 import br.com.cabreira.minhastarefas.model.Tarefa;
 import br.com.cabreira.minhastarefas.model.TarefaCategoria;
-import br.com.cabreira.minhastarefas.model.TarefaStatus;
 import br.com.cabreira.minhastarefas.model.Usuario;
 import br.com.cabreira.minhastarefas.repository.TarefaCategoriaRepository;
 import br.com.cabreira.minhastarefas.repository.TarefaRepository;
@@ -42,7 +41,7 @@ public class CarregaBaseDeDados{
 
             Tarefa tarefa = new Tarefa();
             tarefa.setDescricao("Aprender Spring Boot");
-            tarefa.setDataDeEntrega(LocalDate.now().plusDays(1));
+            tarefa.setDataEntrega(LocalDate.now().plusDays(1));
             tarefa.setVisivel(true);
             tarefa.setCategoria(categoria);
             tarefa.setUsuario(usuario);
@@ -50,7 +49,7 @@ public class CarregaBaseDeDados{
 
             Tarefa tarefa2 = new Tarefa();
             tarefa2.setDescricao("Testar SpringBoot");
-            tarefa2.setDataDeEntrega(LocalDate.now().plusDays(2));
+            tarefa2.setDataEntrega(LocalDate.now().plusDays(2));
             tarefa2.setVisivel(true);
             tarefa2.setCategoria(categoria);
             tarefa2.setUsuario(usuario);
