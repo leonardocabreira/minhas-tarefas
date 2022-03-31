@@ -1,10 +1,7 @@
 package br.com.cabreira.minhastarefas.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Entity
@@ -30,10 +27,12 @@ public class Tarefa {
 
     private boolean visivel;
 
+    @NotNull(message = "{tarefa.categoria.not-null}")
     @ManyToOne
     @JoinColumn(nullable = false)
     private TarefaCategoria categoria;
 
+    @NotNull(message = "{tarefa.usuario.not-null}")
     @ManyToOne
     @JoinColumn(nullable = false)
     private Usuario usuario;

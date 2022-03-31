@@ -1,11 +1,17 @@
 package br.com.cabreira.minhastarefas.controller.request;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 public class UsuarioRequest {
 
     private Integer id;
 
+    @NotBlank(message = "{usuario.nome.not-blank}")
     private String nome;
 
+    @NotBlank(message = "{usuario.senha.not-blank}")
+    @Size(min=8, max=64, message = "{usuario.senha.size}")
     private String senha;
 
     public String getSenha() {

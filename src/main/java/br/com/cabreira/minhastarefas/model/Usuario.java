@@ -3,6 +3,7 @@ package br.com.cabreira.minhastarefas.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,13 +12,16 @@ import java.util.Set;
 @Table(name="Usuarios")
 public class Usuario {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @NotBlank(message = "{usuario.nome.not-blank}")
     @Column(nullable = false)
     private String nome;
 
+    @NotBlank(message = "{usuario.senha.not-blank}")
     @Column(nullable = false)
     private String senha;
 

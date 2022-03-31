@@ -32,7 +32,7 @@ public class CarregaBaseDeDados{
         return args -> {
             Usuario usuario = new Usuario();
             usuario.setNome("Leonardo");
-            usuario.setSenha("123456");
+            usuario.setSenha("12345678");
             usuarioRepository.save(usuario);
 
             TarefaCategoria categoria = new TarefaCategoria();
