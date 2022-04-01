@@ -38,7 +38,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/usuario/{id}")
-    public UsuarioResponse ususario(@PathVariable Integer id){
+    public UsuarioResponse usuario(@PathVariable Integer id){
         final Usuario usuario = service.getUsuarioPorId(id);
         return mapper.map(usuario, UsuarioResponse.class);
     }

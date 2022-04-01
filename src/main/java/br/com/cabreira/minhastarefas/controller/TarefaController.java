@@ -6,15 +6,20 @@ import br.com.cabreira.minhastarefas.model.Tarefa;
 import br.com.cabreira.minhastarefas.services.TarefaService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 @RestController
+@RequestMapping("/tarefa")
 public class TarefaController {
 
     @Autowired
@@ -23,7 +28,7 @@ public class TarefaController {
    @Autowired
     private TarefaService service;
 
-    @GetMapping("/tarefa")
+    @GetMapping
     public List<TarefaResponse> todasTarefas(@RequestParam Map<String,String> parametros){
         List<Tarefa> tarefas = new ArrayList<>();
 
@@ -37,19 +42,30 @@ public class TarefaController {
         return tarefasResponse;
     }
 
-    @GetMapping("/tarefa/{id}")
-    public TarefaResponse tarefa(@PathVariable Integer id){
+    @GetMapping("/{id}")
+    public EntityModel<TarefaResponse>  tarefa(@PathVariable Integer id){
         final Tarefa tarefa = service.getTarefaPorId(id);
-        return mapper.map(tarefa, TarefaResponse.class);
+        TarefaResponse tarefaResponse = mapper.map(tarefa, TarefaResponse.class);
+        EntityModel<TarefaResponse> tarefaModel = EntityModel.of(tarefaResponse, linkTo(methodOn(TarefaController.class).tarefa(id)).withSelfRel()
+                                                                               , linkTo(methodOn(TarefaController.class).todasTarefas(new HashMap<>())).withRel("tarefas")
+                                                                               , linkTo(methodOn(TarefaCategoriaController.class).categoria(tarefaResponse.getCategoriaId())).withRel("categoria")
+                                                                               , linkTo(methodOn(UsuarioController.class).usuario(tarefaResponse.getUsuarioId())).withRel("usuario"));
+        return tarefaModel;
     }
             /*produces = JSON*/
-    @PostMapping(value = "/tarefa")
-    public TarefaResponse salvarTarefa(@Valid @RequestBody TarefaRequest tarefaRequest){
+    @PostMapping()
+    public EntityModel<TarefaResponse> salvarTarefa(@Valid @RequestBody TarefaRequest tarefaRequest){
         Tarefa tarefa = mapper.map(tarefaRequest, Tarefa.class);
-        return mapper.map(service.salvarTarefa(tarefa),TarefaResponse.class);
+        TarefaResponse tarefaResponse = mapper.map(service.salvarTarefa(tarefa), TarefaResponse.class);
+        EntityModel<TarefaResponse> tarefaModel = EntityModel.of(tarefaResponse, linkTo(methodOn(TarefaController.class).tarefa(tarefaResponse.getId())).withSelfRel()
+                , linkTo(methodOn(TarefaController.class).todasTarefas(new HashMap<>())).withRel("tarefas")
+                , linkTo(methodOn(TarefaCategoriaController.class).categoria(tarefaResponse.getCategoriaId())).withRel("categoria")
+                , linkTo(methodOn(UsuarioController.class).usuario(tarefaResponse.getUsuarioId())).withRel("usuario"));
+        return tarefaModel;
+
     }
 
-    @DeleteMapping("/tarefa/{id}")
+    @DeleteMapping("/{id}")
     public void excluirTarefa(@PathVariable Integer id){
         service.deletePorId(id);
     }
