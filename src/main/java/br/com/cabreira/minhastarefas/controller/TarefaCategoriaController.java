@@ -1,17 +1,20 @@
 package br.com.cabreira.minhastarefas.controller;
 
+import br.com.cabreira.minhastarefas.controller.assembler.TarefaCategoriaModelAssembler;
 import br.com.cabreira.minhastarefas.controller.request.TarefaCategoriaRequest;
 import br.com.cabreira.minhastarefas.controller.response.TarefaCategoriaResponse;
-import br.com.cabreira.minhastarefas.controller.response.TarefaResponse;
 import br.com.cabreira.minhastarefas.model.TarefaCategoria;
-import br.com.cabreira.minhastarefas.repository.TarefaCategoriaRepository;
 import br.com.cabreira.minhastarefas.services.TarefaCategoriaService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,8 +28,11 @@ public class TarefaCategoriaController {
     @Autowired
     private TarefaCategoriaService service;
 
+    @Autowired
+    private TarefaCategoriaModelAssembler assembler;
+
     @GetMapping("/categoria")
-    public List<TarefaCategoriaResponse> todasCategorias(@RequestParam Map<String,String> parametros){
+    public CollectionModel<EntityModel<TarefaCategoriaResponse>> todasCategorias(@RequestParam Map<String,String> parametros){
         List<TarefaCategoria> categorias = new ArrayList<>();
         if(parametros.isEmpty()){
             categorias = service.getTodasCategorias();
@@ -34,13 +40,14 @@ public class TarefaCategoriaController {
             categorias = service.getCategoriaPorNome(parametros.get("nome"));
         }
 
-        final List<TarefaCategoriaResponse> tarefasCategoriaResponse = categorias.stream().map(categoria -> mapper.map(categoria, TarefaCategoriaResponse.class)).collect(Collectors.toList());
-        return tarefasCategoriaResponse;
+        List<EntityModel<TarefaCategoriaResponse>> tarefasCategoriasModel = categorias.stream().map(assembler::toModel).collect(Collectors.toList());
+        return CollectionModel.of(tarefasCategoriasModel, WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(TarefaCategoriaController.class).todasCategorias(new HashMap<>())).withSelfRel());
     }
 
     @GetMapping("/categoria/{id}")
-    public TarefaCategoriaResponse categoria(@PathVariable Integer id){
-        return mapper.map(service.getCategoria(id), TarefaCategoriaResponse.class);
+    public EntityModel<TarefaCategoriaResponse> categoria(@PathVariable Integer id){
+        TarefaCategoria tarefaCategoria = service.getCategoria(id);
+        return assembler.toModel(tarefaCategoria);
     }
 
     @PostMapping("/categoria")

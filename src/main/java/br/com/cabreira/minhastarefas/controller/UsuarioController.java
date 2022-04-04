@@ -1,15 +1,20 @@
 package br.com.cabreira.minhastarefas.controller;
 
+import br.com.cabreira.minhastarefas.controller.assembler.UsuarioModelAssembler;
 import br.com.cabreira.minhastarefas.controller.request.UsuarioRequest;
 import br.com.cabreira.minhastarefas.controller.response.UsuarioResponse;
 import br.com.cabreira.minhastarefas.model.Usuario;
 import br.com.cabreira.minhastarefas.services.UsuarioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,8 +28,11 @@ public class UsuarioController {
     @Autowired
     private UsuarioService service;
 
+    @Autowired
+    private UsuarioModelAssembler assembler;
+
     @GetMapping("/usuario")
-    public List<UsuarioResponse> todosUsuarios(@RequestParam Map<String,String> parametros){
+    public CollectionModel<EntityModel<UsuarioResponse>> todosUsuarios(@RequestParam Map<String,String> parametros){
         List<Usuario> usuarios = new ArrayList<>();
 
         if(parametros.isEmpty()) {
@@ -33,14 +41,14 @@ public class UsuarioController {
             String descricao = parametros.get("nome");
             usuarios = service.getUsuarioPorNome(descricao);
         }
-        final List<UsuarioResponse> usuarioResponse = usuarios.stream().map(usuario -> mapper.map(usuario, UsuarioResponse.class)).collect(Collectors.toList());
-        return usuarioResponse;
+        List<EntityModel<UsuarioResponse>> usuariosModel = usuarios.stream().map(assembler::toModel).collect(Collectors.toList());
+        return CollectionModel.of(usuariosModel, WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioController.class).todosUsuarios(new HashMap<>())).withSelfRel());
     }
 
     @GetMapping("/usuario/{id}")
-    public UsuarioResponse usuario(@PathVariable Integer id){
+    public EntityModel<UsuarioResponse> usuario(@PathVariable Integer id){
         final Usuario usuario = service.getUsuarioPorId(id);
-        return mapper.map(usuario, UsuarioResponse.class);
+        return assembler.toModel(usuario);
     }
     /*produces = JSON*/
     @PostMapping(value = "/usuario")
