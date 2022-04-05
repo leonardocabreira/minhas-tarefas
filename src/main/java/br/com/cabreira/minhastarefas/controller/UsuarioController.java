@@ -9,7 +9,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -52,9 +54,10 @@ public class UsuarioController {
     }
     /*produces = JSON*/
     @PostMapping(value = "/usuario")
-    public UsuarioResponse salvarUsuario(@Valid @RequestBody UsuarioRequest usuarioRequest){
-        Usuario usuario = mapper.map(usuarioRequest, Usuario.class);
-        return mapper.map(service.salvarUsuario(usuario),UsuarioResponse.class);
+    public ResponseEntity<EntityModel<UsuarioResponse>> salvarUsuario(@Valid @RequestBody UsuarioRequest usuarioRequest){
+        Usuario usuario = service.salvarUsuario(mapper.map(usuarioRequest, Usuario.class));
+        EntityModel<UsuarioResponse> usuarioModel = assembler.toModel(usuario);
+        return ResponseEntity.created(usuarioModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(usuarioModel);
     }
 
     @DeleteMapping("/usuario/{id}")
